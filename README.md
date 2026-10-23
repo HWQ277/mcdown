@@ -56,6 +56,14 @@
 - 自动检测 Java；Forge / NeoForge 也可以在界面中选择 `java` / `java.exe`
 - 安装器完整输出保存到 `.minecraft/.mcdown/installers/`，不污染版本目录
 
+## 下载 Windows EXE
+
+无需安装 Python，直接下载最新发行版：
+
+**https://github.com/HWQ277/mcdown/releases/latest**
+
+发行版中的 `MCDown.exe` 是单文件 Windows 程序，双击即可打开图形界面。该文件未做代码签名，Windows SmartScreen 可能提示“未知发布者”；此时请核对 SHA-256 校验值后选择“仍要运行”。
+
 ## 环境要求
 
 - Python 3.8 或更高版本
@@ -268,16 +276,18 @@ BMCLAPI 是镜像服务，部分文件请求可能会 302 重定向到官方 CDN
 - 不要在没有关闭安装器或启动器的情况下删除正在写入的版本目录。
 - Forge / NeoForge 安装器需要可用的 Java；安装失败时请先查看 `.mcdown/installers/` 下的日志。
 
-## 打包为 Windows EXE（可选）
+## 打包为 Windows EXE
 
-如果希望发给没有 Python 的 Windows 用户，可以在 Windows 上使用 PyInstaller：
+仓库内置 GitHub Actions 工作流 `.github/workflows/build-windows.yml`，在 `windows-latest` 上使用 PyInstaller 构建单文件 EXE，避免 Linux 交叉编译带来的兼容问题。EXE 会作为 Release 资产发布。
+
+也可以在 Windows 本地构建：
 
 ```bat
 py -m pip install pyinstaller
-pyinstaller --noconfirm --onefile --windowed --name MC版本下载器 mcdown.py
+pyinstaller --noconfirm --onefile --windowed --name MCDown mcdown.py
 ```
 
-生成的程序在 `dist\MC版本下载器.exe`。
+生成的程序在 `dist\MCDown.exe`。
 
 ## 许可证
 

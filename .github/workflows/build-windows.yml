@@ -1,0 +1,38 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyInstaller
+        run: python -m pip install --upgrade pip pyinstaller
+
+      - name: Build EXE
+        shell: pwsh
+        run: |
+          python -m PyInstaller --noconfirm --clean --onefile --windowed --name MCDown mcdown.py
+          if (-not (Test-Path "dist\MCDown.exe")) { throw "MCDown.exe was not produced" }
+          Get-Item "dist\MCDown.exe" | Format-List Name, Length, FullName
+          Get-FileHash "dist\MCDown.exe" -Algorithm SHA256 | Format-List
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MCDown-windows
+          path: dist/MCDown.exe
+          if-no-files-found: error
+          retention-days: 30
